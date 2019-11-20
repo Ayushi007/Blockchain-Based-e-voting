@@ -100,8 +100,10 @@ def listenRegistrationRequest():
 
 create_shared_database()
 create_voter_table()
-th_public=Thread(target=listenPublicKeys)
-th_public.start()
+
+#removing thread for listening to public keys, storing in file with voter ID
+#th_public=Thread(target=listenPublicKeys)
+#th_public.start()
 
 th_register=Thread(target=listenRegistrationRequest)
 th_register.start()
