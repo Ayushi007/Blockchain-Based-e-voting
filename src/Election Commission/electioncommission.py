@@ -10,6 +10,10 @@ HOST = '0.0.0.0'
 PORT_PUBLICKEY = 5320
 PORT_REGISTER = 5321
 public_keys = []
+p=179
+g=137
+valid = "not-ok"
+y = ()
 #creates a shared SQL database for storing registration information
 def create_shared_database():
 	
@@ -46,17 +50,29 @@ def listenRegistrationRequest():
 	    s.listen(1)
 	    (conn, (ip, port)) = s.accept()
 	    data = conn.recv(1024)
-	   	#connect to the voter you just received data from and send a random number c
-	    randomNo = generateRandomNumber(64)
-	    data = pickle.dumps(randomNo)
+		m = data  #g^r 
+	    #connect to the voter you just received data from and send a random number c
+	    c = generateRandomNumber(4)
+	    data = pickle.dumps(c)
 	    conn.send(data)
-	    #receive data from voter again 
+	    #receive data from vote
 	    data = conn.recv(1024)
-	    #compute stuff and verify stuff (Krithiga will send)
-	    #if match send ok to voter
+		s = data 
+	    #compute stuff and verify stuff 
+		#if match send ok to voter
+		k = pow(g,s)%p
+		for i in y:
+		if gr * pow(i%p,c) == gs:
+			valid = "ok"
+			break
+		data = valid
+		conn.send(data)
 	    #receive hash message from voter if sent ok
+		data = conn.recv(1024)
 	    #random number generate - reference number
+		ref_no = generateRandomNumber(6)
 	    #send reference number back to voter
+		conn.send(data)
 	    #store in shared database secret message and reference number
 
 
