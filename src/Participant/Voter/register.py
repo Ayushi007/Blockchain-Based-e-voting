@@ -20,7 +20,9 @@ ec_ip = '192.168.43.131'
 myPort=4322
 ec_port = 5321
 id = 100
-#p=179 g=137
+p=179
+g=137
+
 def register():
 	s_ec = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	s_ec.connect((ec_ip, ec_port))
@@ -28,13 +30,15 @@ def register():
     #ZKP Algorithm to make EC verify that id(=100) is valid
     # send random number to EC
     r = random.getrandbits(4)
-    m = pow(137, r) % 179
-    s_ec.send(m)
+    m = pow(g, r) % 179
+    data1 = pickle.dumps(m)
+    s_ec.send(data1)
 
     # Get random number from EC
     c = s_ec.recv(1024)
     s = r + c*(id)
-    s_ec.send(s)
+    data2 =pickle.dumps(s)
+    s_ec.send(data2)
 
     # Hashed Secret message
 	hashMessage = encryptedSecretMessage(6)

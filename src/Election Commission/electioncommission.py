@@ -16,10 +16,10 @@ valid = "not-ok"
 y = ()
 #creates a shared SQL database for storing registration information
 def create_shared_database():
-	
+
 #populates the list eligible voters to create a list of govt. issued IDs for eligible voters using a file
 def populate_voters():
-	
+
 
 def listenpublickeys():
 	while(True):
@@ -50,23 +50,25 @@ def listenRegistrationRequest():
 	    s.listen(1)
 	    (conn, (ip, port)) = s.accept()
 	    data = conn.recv(1024)
-		m = data  #g^r 
+		m = data  #g^r
 	    #connect to the voter you just received data from and send a random number c
 	    c = generateRandomNumber(4)
 	    data = pickle.dumps(c)
 	    conn.send(data)
 	    #receive data from vote
-	    data = conn.recv(1024)
-		s = data 
-	    #compute stuff and verify stuff 
+	    data1 = conn.recv(1024)
+		s = data1
+	    #compute stuff and verify stuff
 		#if match send ok to voter
 		k = pow(g,s)%p
+		valid = False
 		for i in y:
-		if gr * pow(i%p,c) == gs:
-			valid = "ok"
-			break
-		data = valid
-		conn.send(data)
+			if (m * pow(i, c) == k):
+				valid = True
+				break
+		if(!valid):
+			conn.close()
+			continue
 	    #receive hash message from voter if sent ok
 		data = conn.recv(1024)
 	    #random number generate - reference number
@@ -82,7 +84,3 @@ th_public.start()
 
 th_register=Thread(target=listenRegistrationRequest)
 th_register.start()
-
-
-
-   
