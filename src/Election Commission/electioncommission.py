@@ -1,6 +1,7 @@
 import socket
 import pickle
 from threading import Thread
+import mysql.connector
 import time
 import random
 
@@ -9,7 +10,9 @@ HOST = '0.0.0.0'
 PORT_PUBLICKEY = 5320
 PORT_REGISTER = 5321
 public_keys = []
-
+#creates a shared SQL database for storing registration information
+def create_shared_database():
+	
 #populates the list eligible voters to create a list of govt. issued IDs for eligible voters using a file
 def populate_voters():
 	
@@ -57,6 +60,7 @@ def listenRegistrationRequest():
 	    #store in shared database secret message and reference number
 
 
+create_shared_database()
 th_public=Thread(target=listenPublicKeys)
 th_public.start()
 
