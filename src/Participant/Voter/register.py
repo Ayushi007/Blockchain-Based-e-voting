@@ -19,15 +19,29 @@ myIp='0.0.0.0'
 ec_ip = '192.168.43.131'
 myPort=4322
 ec_port = 5321
-
+id = 100
+#p=179 g=137
 def register():
 	s_ec = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	s_ec.connect((ec_ip, ec_port))
 
+    #ZKP Algorithm to make EC verify that id(=100) is valid
+    # send random number to EC
+    r = random.getrandbits(4)
+    m = pow(137, r) % 179
+    s_ec.send(m)
 
+    # Get random number from EC
+    c = s_ec.recv(1024)
+    s = r + c*(id)
+    s_ec.send(s)
+
+    # Hashed Secret message
 	hashMessage = encryptedSecretMessage(6)
 	data = pickle.dumps(hashMessage)
 	s_ec.send(data)
+
+    # Reference number received from EC for that election
     ref_number = s_ec.recv(1024)
     file1 = open('refNum.txt', 'w')
     file1.write(ref_number)
