@@ -12,7 +12,7 @@ PORT_REGISTER = 5321
 public_keys = []
 p=179
 g=137
-valid = "not-ok"
+valid = True
 y = []
 
 #creates a shared SQL database for storing registration information
@@ -37,7 +37,7 @@ def create_voter_table():
 	#assuming secret message and reference number are both strings
 	mycursor.execute("CREATE TABLE voters (secret VARCHAR(255), reference VARCHAR(255))")
 
-#populates the voter IDs and keys to create a list of govt. issued 
+#populates the voter IDs and keys to create a list of govt. issued
 def populate_voters():
 
 
@@ -81,14 +81,14 @@ def listenRegistrationRequest():
 	    #compute stuff and verify stuff
 	    #if match send ok to voter
 	    k = pow(g,s)%p
-            valid = False
+        valid = False
 	    for i in y:
-		if (m * pow(i, c) == k):
-			valid = True
-			break
-	    if(!valid):
-		conn.close()
-		continue
+			if (m * pow(i, c) == k):
+				valid = True
+				break
+	    if(not valid):
+			conn.close()
+			continue
 	    #receive hash message from voter if sent ok
 	    data = conn.recv(1024)
 	    #random number generate - reference number
