@@ -1,6 +1,6 @@
 import socket
 import pickle
-from ..encryptions import *
+from encryptions import *
 import random
 import string
 
@@ -11,39 +11,50 @@ def encryptedSecretMessage(stringLength):
     for i in range(stringLength):
         message += random.choice(letters_and_digits)
     private_key, public_key = generate_keys()
-    return sign(message, private_key)
+    return sign(private_key, message)
 
-myIp='0.0.0.0'
-ec_ip = '192.168.43.131'
+myIp='10.168.0.7'
+ec_ip = '10.168.0.6'
 myPort = 4322
-ec_port = 5321
+ec_port = 5322
 id = 100
 p = 179
 g = 137
 
 s_ec = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s_ec.connect((ec_ip, ec_port))
-
+print("Connection established")
 #ZKP Algorithm to make EC verify that id(=100) is valid
 # send random number to EC
 r = random.getrandbits(4)
-m = pow(g, r) % 179
-data1 = pickle.dumps(m)
+m = pow(g, r) % p
+print("Send g^r%p", m)
+data1 = bytes(str(m),'utf-8')
+#data1 = pickle.dumps(m)
 s_ec.send(data1)
 
 # Get random number from EC
 c = s_ec.recv(1024)
-s = r + c*id
-data2 = pickle.dumps(s)
+print("Received c", c)
+c = int(str(c, 'utf-8'))
+#c = int.from_bytes(c,byteorder='big')
+print("Converted c", c)
+s = (r + c*id)%(p-1)
+data2 = bytes(str(s), 'utf-8')
+#data2 = pickle.dumps(s)
+print("Send s = r+c*id", s)
 s_ec.send(data2)
 
 # Hashed Secret message
 hashMessage = encryptedSecretMessage(6)
-data = pickle.dumps(hashMessage)
+print("hashMessage", hashMessage)
+data = bytes(str(hashMessage), 'utf-8')
+#data = pickle.dumps(hashMessage)
 s_ec.send(data)
 
 # Reference number received from EC for that election
 ref_number = s_ec.recv(1024)
+ref_number = str(ref_number, 'utf-8')
 file1 = open('refNum.txt', 'w')
 file1.write(str(ref_number))
 file1.close()

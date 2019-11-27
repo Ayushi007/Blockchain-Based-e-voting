@@ -2,6 +2,7 @@ import Crypto
 from Crypto import Random
 from Crypto.PublicKey import RSA
 import base64
+from Crypto.Cipher import PKCS1_v1_5 as csign
 
 def generate_keys():
     # RSA modulus length must be a multiple of 256 and >= 1024
@@ -11,7 +12,9 @@ def generate_keys():
     return private_key, public_key
 
 def sign(privatekey,data):
-    return base64.b64encode(str((privatekey.sign(data, ''))[0]).encode())
+    cipher = csign.new(privatekey)
+    cipher_text = cipher.encrypt(data.encode())
+    return base64.b64encode(cipher_text)
 
 def verify(publickey,data,sign):
      return publickey.verify(data, (int(base64.b64decode(sign)),))
