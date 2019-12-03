@@ -1,6 +1,6 @@
 import Crypto
 from Crypto import Random
-from Crypto.PublicKey import RSA
+from Crypto.PublicKey import DSA
 from Crypto.Hash import SHA
 #import base64
 #from Crypto.Cipher import PKCS1_v1_5 as csign
@@ -8,7 +8,7 @@ from Crypto.Hash import SHA
 def generate_keys():
     # RSA modulus length must be a multiple of 256 and >= 1024
     modulus_length = 256*4 # use larger value in production
-    private_key = RSA.generate(modulus_length, Random.new().read)
+    private_key = DSA.generate(modulus_length, Random.new().read)
     public_key = private_key.publickey()
     return private_key, public_key
 
@@ -33,4 +33,3 @@ def verify(public_key,hdata,sign):
 #     decoded_ciphertext = base64.b64decode(b64cipher)
 #     plaintext = rsa_privatekey.decrypt(decoded_ciphertext)
 #     return plaintext
-

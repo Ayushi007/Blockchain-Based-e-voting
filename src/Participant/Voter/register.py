@@ -4,14 +4,18 @@ from encryptions import *
 import random
 import string
 
+
+file1 = open('Privatekey.txt', 'r')
+private_key =file1.read()
+file1.close
+
 def encryptedSecretMessage(stringLength):
     # Generate a random string of letters and digits
     letters_and_digits = string.ascii_letters + string.digits
     message = ''
     for i in range(stringLength):
         message += random.choice(letters_and_digits)
-    private_key, public_key = generate_keys()
-    return sign(private_key, message)
+    return sign(private_key,message)
 
 myIp='10.168.0.7'
 ec_ip = '10.168.0.6'
@@ -44,14 +48,13 @@ data2 = bytes(str(s), 'utf-8')
 #data2 = pickle.dumps(s)
 print("Send s = r+c*id", s)
 s_ec.send(data2)
-
 # Hashed Secret message
-hashMessage = encryptedSecretMessage(6)
+hashMessage, signature = encryptedSecretMessage(6)
 print("hashMessage", hashMessage)
-data = bytes(str(hashMessage), 'utf-8')
+h = bytes(str(hashMessage), 'utf-8')
+sig = bytes(str(signature),'utf-8')
 #data = pickle.dumps(hashMessage)
-s_ec.send(data)
-
+s_ec.send((h,sig))
 # Reference number received from EC for that election
 ref_number = s_ec.recv(1024)
 ref_number = str(ref_number, 'utf-8')
