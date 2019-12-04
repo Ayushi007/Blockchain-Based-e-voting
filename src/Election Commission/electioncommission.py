@@ -123,6 +123,8 @@ def listenRegistrationRequest():
                         print("Valid Voter")
                         break
                 if(not valid):
+                    invalidMsg = bytes('-1', 'utf-8')
+                    conn.send(invalidMsg)
                     conn.close()
                     continue
                 #receive hash message with private key encrypted from voter if sent ok
@@ -152,8 +154,22 @@ def listenRegistrationRequest():
                 if(not found_keys):
                     print("Authentication failed")
                     conn.close()
-
-
+                    continue
+                
+                init_multichain = conn.recv(1024)
+                connect_multi = bytes('multichaind survey@10.168.0.6:9543 -daemon', 'utf-8')
+                conn.send(connect_multi)
+                print("Sent command to Voter to get added to multichain")
+                
+                voter_add = conn.recv(1024)
+                v_add = str(voter_add, 'utf-8')
+                access_cmd = "multichain-cli survey grant "+ v_add+" receive,send"
+                os.system(access_cmd)
+                print("Granted receive permission to Voter:", v_add)
+                
+                send_token = "multichain-cli survey sendassettoaddress "+v_add+" token 1"
+                os.system(send_token)
+                print("Token given to Voter: ", v_add)
 
 
 #create_shared_database()
