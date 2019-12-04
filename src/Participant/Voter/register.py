@@ -15,11 +15,11 @@ def encryptedSecretMessage(stringLength):
    # private_key, public_key = generate_keys()
     return sign(private_key, message)
 
-myIp='10.168.0.7'
-ec_ip = '10.168.0.6'
+myIp='10.168.0.6'
+ec_ip = '10.168.0.7'
 myPort = 4322
 ec_port = 5430
-id = 100
+id = 304
 p = 179
 g = 137
 
@@ -36,15 +36,15 @@ data1 = bytes(str(m),'utf-8')
 s_ec.send(data1)
 
 # Get random number from EC
-c = s_ec.recv(1024)
-print("Received c", c)
-c = int(str(c, 'utf-8'))
+#c = s_ec.recv(1024)
+#print("Received c", c)
+#c = int(str(c, 'utf-8'))
 #c = int.from_bytes(c,byteorder='big')
-print("Converted c", c)
-s = (r + c*id)%(p-1)
+#print("Converted c", c)
+s = (r + id)%(p-1)
 data2 = bytes(str(s), 'utf-8')
 #data2 = pickle.dumps(s)
-print("Send s = r+c*id", s)
+print("Send s = r+id", s)
 s_ec.send(data2)
 
 # Hashed Secret message
