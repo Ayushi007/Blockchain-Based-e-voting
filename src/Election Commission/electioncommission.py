@@ -20,15 +20,7 @@ g=137
 valid = False
 found_keys= False
 
-y = [137, 153, 18, 139, 69, 145, 175, 168, 104, 107, 160, 82, 136, 16, 44, 121,
-109, 76, 30, 172, 115, 3, 53, 101, 54, 59, 28, 77, 167, 146, 133, 142, 122, 67, 50, 48,
-132, 5, 148, 49, 90, 158, 166, 9, 159, 124, 162, 177, 84, 52, 143, 80, 41, 68, 8, 22, 150,
-144, 38, 15, 86, 147, 91, 116, 140, 27, 119, 14, 128, 173, 73, 156, 71, 61, 123, 25, 24, 66,
-92, 74, 114, 45, 79, 83, 94, 169, 62, 81, 178, 42, 26, 161, 40, 110, 34, 4, 11, 75, 72, 19, 97,
-43, 163, 135, 58, 70, 103, 149, 7, 64, 176, 126, 78, 125, 120, 151, 102, 12, 33, 46, 37, 57,
-112, 129, 131, 47, 174, 31, 130, 89, 21, 13, 170, 20, 55, 17, 2, 95, 127, 36, 99, 138, 111, 171,
-157, 29, 35, 141, 164, 93, 32, 88, 63, 39, 152, 60, 165, 51, 6, 106, 23, 108, 118, 56, 154, 155,
-113, 87, 105, 65, 134, 100, 96, 85, 10, 117, 98, 1]
+y = [139, 24, 100, 32, 143, 163, 63, 90, 47, 98, 21, 171, 111, 131, 71, 40, 45, 110, 6, 130, 10, 163, 47, 13, 154, 81, 96, 90, 49, 171]
 
 candidate_id = []
 public_keys = []
@@ -108,11 +100,11 @@ def listenRegistrationRequest():
                 #creates public address and instantitates into multichain
             else:
                 #connect to the voter you just received data from and send a random number c.
-                c = generateRandomNumber(4)
-                data = bytes(str(c), 'utf-8')
+                #c = generateRandomNumber(4)
+                #data = bytes(str(c), 'utf-8')
                 #data = pickle.dumps(c)
-                print("c generated is", c)
-                conn.send(data)
+                #print("c generated is", c)
+                #conn.send(data)
                 #receive data from vote
                 data1 = conn.recv(1024)
                 s = data1
@@ -126,7 +118,7 @@ def listenRegistrationRequest():
                 print("k is", k)
                 valid = False
                 for i in y:
-                    if ((m * pow(i, 4))%p == k):
+                    if ((m * i)%p == k):
                         valid = True
                         print("Valid Voter")
                         break
