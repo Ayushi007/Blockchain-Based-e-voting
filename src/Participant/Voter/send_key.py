@@ -2,8 +2,8 @@ import socket
 import pickle
 from encryptions import generate_keys
 
-myIp = '0.0.0.0'
-ec_ip = '10.168.0.6'
+myIp = '10.138.0.2'
+ec_ip = '10.168.0.5'
 myPort = 4322
 ec_port = 5420
 
