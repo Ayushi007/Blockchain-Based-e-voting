@@ -4,6 +4,7 @@ from encryptions import *
 import random
 import string
 from send_key import *
+import subprocess
 
 def encryptedSecretMessage(stringLength):
     # Generate a random string of letters and digits
@@ -64,8 +65,37 @@ s_ec.send(mess)
 # Reference number received from EC for that election
 ref_number = s_ec.recv(1024)
 ref_number = str(ref_number, 'utf-8')
+if(ref_number == -1):
+    print("Invalid voter")
+    s_ec.close()
+    exit()
+
+
+
+
 file1 = open('refNum.txt', 'w')
 file1.write(str(ref_number)+'\n')
+
 file1.close()
+
+initiate_msg = "connect blockchain"
+initiate_msg = bytes(initiate_msg,'utf-8')
+print("Sending initiate message",initiate_msg)
+s_ec.send(initiate_msg)
+
+command = s_ec.recv(1024)
+command = str(command, 'utf-8')
+print("Receiving command",command) 
+os.system(command)
+
+command_getadddress = "multichain-cli survey getnewaddress"
+output = subprocess.check_output(command_getaddress)
+print("Output of get address",output)
+output = output.split('\n')[-2]
+print("Address of voter",output)
+
+output = bytes(output, 'utf-8')
+print("Sending address in byte format",output)
+s_ec.send(output)
+
 s_ec.close()
-print("Registered successfully")
