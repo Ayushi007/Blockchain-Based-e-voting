@@ -9,6 +9,7 @@ def generate_keys():
     modulus_length = 256*4 # use larger value in production
     private_key = RSA.generate(modulus_length, Random.new().read)
     public_key = private_key.publickey()
+    print(str(private_key))
     return private_key, public_key
 
 def sign(privatekey,data):
