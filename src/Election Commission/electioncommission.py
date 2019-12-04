@@ -100,11 +100,11 @@ def listenRegistrationRequest():
                 #creates public address and instantitates into multichain
             else:
                 #connect to the voter you just received data from and send a random number c.
-                #c = generateRandomNumber(4)
-                #data = bytes(str(c), 'utf-8')
+                c = 1
+                data = bytes(str(c), 'utf-8')
                 #data = pickle.dumps(c)
                 #print("c generated is", c)
-                #conn.send(data)
+                conn.send(data)
                 #receive data from vote
                 data1 = conn.recv(1024)
                 s = data1
