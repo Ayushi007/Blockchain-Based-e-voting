@@ -21,10 +21,10 @@ valid = False
 found_keys= False
 
 y = [139, 24, 100, 32, 143, 163, 63, 90, 47, 98, 21, 171, 111, 131, 71, 40, 45, 110, 6, 130, 10, 163, 47, 13, 154, 81, 96, 90, 49, 171]
-
-candidate_id = []
+#Valid ids for now [538, 433, 350, 329, 407, 459, 687, 219, 482, 533, 131, 144, 499, 303, 429, 271, 260, 450, 693, 663, 175, 637, 304, 132, 165, 622, 529, 575, 574, 322]
+candidate_id = ['CAND01', 'CAND02']
 public_keys = []
-
+cand_add_list = []
 
 #creates a shared SQL database for storing registration information
 """def create_shared_database():
@@ -96,9 +96,17 @@ def listenRegistrationRequest():
             if m in candidate_id:
                 data = bytes('valid', 'utf-8')
                 conn.send(data)
+                
+                cand_add = conn.recv(1024)
+                cand_add = str(cand_add, 'utf-8')
+                access_cmd = "multichain-cli survey grant "+ cand_add+" receive,send"
+                print("Candidate address received")
+                os.system(access_cmd)
+                print("Granted receive permission to Candidate:", cand_add)
+                cand_add_list.append(cand_add)
                 #store in candidate database.
                 #creates public address and instantitates into multichain
-            else:
+            elif(isnumeric(m)):
                 #connect to the voter you just received data from and send a random number c.
                 c = 1
                 data = bytes(str(c), 'utf-8')
