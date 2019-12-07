@@ -30,14 +30,21 @@ s_ec.connect((ec_ip, ec_port))
 print("Connection established with Election Commission")
 #ZKP Algorithm to make EC verify that id(=100) is valid
 # send random number to EC
+
+s_ec.send(bytes("Candidate",'utf-8'))
+start = s_ec.recv(1024)
 data1 = bytes(id, 'utf-8')
 s_ec.send(data1)
 
-response = conn.recv(1024)
+response = s_ec.recv(1024)
 resp = str(response, 'utf-8')
-if(resp != 'valid'):
+if(resp == 'invalid'):
     s_ec.close()
     exit()
+
+command = str(response, 'utf-8')
+print("Receiving command",command) 
+os.system(command)
 
 command_getaddress = "multichain-cli survey getnewaddress"
 os.system(command_getaddress+"> address.txt")

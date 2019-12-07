@@ -1,0 +1,3 @@
+{"method":"getnewaddress","params":[],"id":1,"chain_name":"survey"}
+
+13MWmyUosPFuQn6dqvyL2ubriiuKnLCiRJFNfq
