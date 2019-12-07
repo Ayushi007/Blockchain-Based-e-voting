@@ -5,6 +5,7 @@ import random
 import string
 from send_key import *
 import subprocess
+import os
 
 def encryptedSecretMessage(stringLength):
     # Generate a random string of letters and digits
@@ -17,7 +18,7 @@ def encryptedSecretMessage(stringLength):
     return sign(private_key, message)
 
 myIp='10.138.0.2'
-ec_ip = '10.168.0.5'
+ec_ip = '10.168.0.6'
 myPort = 4322
 ec_port = 5430
 id = 304
@@ -88,14 +89,19 @@ command = str(command, 'utf-8')
 print("Receiving command",command) 
 os.system(command)
 
-command_getadddress = "multichain-cli survey getnewaddress"
-output = subprocess.check_output(command_getaddress)
-print("Output of get address",output)
-output = output.split('\n')[-2]
-print("Address of voter",output)
+command_getaddress = "multichain-cli survey getnewaddress"
+os.system(command_getaddress+"> address.txt")
+print("Os System ran")
+add_file = open('address.txt', 'r')
+content = add_file.read()
+address_voter = content.split('\n')[-2]
+#output = subprocess.check_output(command_getaddress)
+#print("Output of get address",output)
+#output = output.split('\n')[-2]
+print("Address of voter",address_voter)
 
-output = bytes(output, 'utf-8')
-print("Sending address in byte format",output)
-s_ec.send(output)
+address_voter = bytes(address_voter, 'utf-8')
+print("Sending address in byte format",address_voter)
+s_ec.send(address_voter)
 
 s_ec.close()

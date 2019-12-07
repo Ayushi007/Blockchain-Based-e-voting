@@ -164,6 +164,7 @@ def listenRegistrationRequest():
                 voter_add = conn.recv(1024)
                 v_add = str(voter_add, 'utf-8')
                 access_cmd = "multichain-cli survey grant "+ v_add+" receive,send"
+                print("Voter_address received")
                 os.system(access_cmd)
                 print("Granted receive permission to Voter:", v_add)
                 
@@ -176,6 +177,7 @@ def listenRegistrationRequest():
 #create_voter_table()
 
 #removing thread for listening to public keys, storing in file with voter ID
+os.system("multichaind survey -daemon")
 th_public=Thread(target=listenPublicKeys)
 th_public.start()
 
