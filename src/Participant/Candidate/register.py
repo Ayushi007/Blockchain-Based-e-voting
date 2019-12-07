@@ -3,7 +3,6 @@ import pickle
 from encryptions import *
 import random
 import string
-from send_key import *
 import subprocess
 import os
 

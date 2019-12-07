@@ -7,6 +7,7 @@ import random
 import string
 import os
 from encryptions import *
+import json
 
 
 HOST = '0.0.0.0'
@@ -22,9 +23,10 @@ found_keys= False
 
 y = [139, 24, 100, 32, 143, 163, 63, 90, 47, 98, 21, 171, 111, 131, 71, 40, 45, 110, 6, 130, 10, 163, 47, 13, 154, 81, 96, 90, 49, 171]
 #Valid ids for now [538, 433, 350, 329, 407, 459, 687, 219, 482, 533, 131, 144, 499, 303, 429, 271, 260, 450, 693, 663, 175, 637, 304, 132, 165, 622, 529, 575, 574, 322]
-candidate_id = ['CAND01', 'CAND02']
+candidate_id = ['CAND01', 'CAND02','CAND03','CAND04']
 public_keys = []
 cand_add_list = []
+json_file = 'candidate_page.json'
 
 #creates a shared SQL database for storing registration information
 """def create_shared_database():
@@ -61,6 +63,8 @@ def listenPublicKeys():
         (conn, (ip, port)) = s.accept()
         data = conn.recv(1024)
         pubKey = pickle.loads(data)
+        # pub_key_file = open('public_keys.pem', 'a')
+        # pub_key_file.write(pubKey)
         public_keys.append(pubKey)
         print("Data- public keys", data)
         print("Converted public keys", pubKey)
@@ -108,7 +112,16 @@ def listenRegistrationRequest():
                     print("Candidate address received")
                     os.system(access_cmd)
                     print("Granted receive permission to Candidate:", cand_add)
-                    cand_add_list.append(cand_add)
+                    
+                    with open('candidate_page.txt', 'r') as json_file:
+                        json_decoded = json.load(json_file)
+                    json_decoded[m] = cand_add
+                    with open('candidate_page.txt', 'w') as json_file:
+                        json.dump(json_decoded, json_file)
+                    
+                    # cand_add_file = open('cand_add.txt', 'a')
+                    # cand_add_file.write([m, cand_add])
+                    #cand_add_list.append(cand_add)
                     continue
                 else :
                     data = bytes('invalid', 'utf-8')
@@ -163,6 +176,8 @@ def listenRegistrationRequest():
             #h, sig = pickle.loads(mess)
             #public key verification.
 
+#             publicKeys = open('public_keys.pem','r')
+#             keys = publicKeys.readlines()
             for pks in public_keys:
                 if(verify(pks,h,sig)):
                     found_keys = True
