@@ -20,6 +20,9 @@ p=179
 g=137
 valid = False
 found_keys= False
+ttp_ip = '198'
+ttp_port = 5322
+os.system("sudo lsof -t -i tcp:5322 | xargs kill -9")
 
 y = [139, 24, 100, 32, 143, 163, 63, 90, 47, 98, 21, 171, 111, 131, 71, 40, 45, 110, 6, 130, 10, 163, 47, 13, 154, 81, 96, 90, 49, 171]
 #Valid ids for now [538, 433, 350, 329, 407, 459, 687, 219, 482, 533, 131, 144, 499, 303, 429, 271, 260, 450, 693, 663, 175, 637, 304, 132, 165, 622, 529, 575, 574, 322]
@@ -113,11 +116,15 @@ def listenRegistrationRequest():
                     os.system(access_cmd)
                     print("Granted receive permission to Candidate:", cand_add)
                     
-                    with open('candidate_page.txt', 'r') as json_file:
-                        json_decoded = json.load(json_file)
-                    json_decoded[m] = cand_add
-                    with open('candidate_page.txt', 'w') as json_file:
-                        json.dump(json_decoded, json_file)
+                    entry = [m, cand_add]
+                    file_cand = open('candidate_page.txt', 'w+')
+                    file_cand.write(str(entry))
+                    file_cand.close()
+                    # with open('candidate_page.txt', 'r') as json_file:
+                    #     json_decoded = json.load(json_file)
+                    # json_decoded[m] = cand_add
+                    # with open('candidate_page.txt', 'w') as json_file:
+                    #     json.dump(json_decoded, json_file)
                     
                     # cand_add_file = open('cand_add.txt', 'a')
                     # cand_add_file.write([m, cand_add])
@@ -186,8 +193,13 @@ def listenRegistrationRequest():
                     ref_no = generateRandomNumber(6)
                     print("Generated ref_number", ref_no)
                     data_ref = bytes(str(ref_no), 'utf-8')
+                    voterDetails = [h, ref_no]
+                    file_voter = open('voter_page.txt', 'w+')
+                    file_voter.write(str(voterDetails))
+                    file_voter.close()
                     #send reference number back to voter
                     conn.send(data_ref)
+                    
                     #store in shared database //secret message// (we can just send reference number its enough) and reference number
                     #creates public address and instantitates into multichain and assigns an asset using multichain.
                     break
@@ -223,3 +235,21 @@ th_public.start()
 
 th_register=Thread(target=listenRegistrationRequest)
 th_register.start()
+
+th_public.join(120)
+th_register.join(120)
+
+s_ttp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s_ttp.connect((ttp_ip, ttp_port))
+# Hashmessage-refNo
+voter_details = open('voter_page.txt', 'r')
+voter_content = voter_details.read()
+s_ttp.send(bytes(voter_content,'utf-8'))
+
+s_ttp.recv(1024) # Random receive
+
+cand_details = open('candidate_page.txt', 'r')
+cand_content = cand_details.read()
+s_ttp.send(bytes(cand_details, 'utf-8'))
+
+          
