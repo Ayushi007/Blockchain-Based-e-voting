@@ -30,8 +30,8 @@ s_ec.connect((ec_ip, ec_port))
 print("Connection established with Election Commission")
 #ZKP Algorithm to make EC verify that id(=100) is valid
 # send random number to EC
-conn.send(bytes('Voter', 'utf-8'))
-start_step = conn.recv(1024)
+s_ec.send(bytes('Voter', 'utf-8'))
+start_step = s_ec.recv(1024)
 print("EC responded: ",str(start_step, 'utf-8'))
 r = random.getrandbits(4)
 m = pow(g, r) % p
