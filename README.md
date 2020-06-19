@@ -17,13 +17,3 @@ We propose to use private blockchain for the purpose to ensure closed elections 
 2. Trusted Third Party - This is involved in the voting procedure to mask the identity of the voter from the Election Commission. It ensures that the voter is registered by communicating with the EC and allows the voter to proceed to the voting page where he/she can view the eligible candidates. 
 
 3. Participant - A Participant is anyone with a valid ID who can either vote or can contest elections. The participants can be of two types: Voter & Candidate. For registering the participant needs to contact the election commisision and get a reference number to be authorized to vote. 
-
-### Registering for election 
-
-Will update 
-
-### Voting 
-
-Will update
-
-
